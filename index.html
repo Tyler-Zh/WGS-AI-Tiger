@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wayfair Shanghai - AI Utilization Infographic</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .card-gradient {
+            background: linear-gradient(135deg, #7F187F, #92DA4D);
+        }
+        /* Styles for the modal */
+        .modal {
+            display: none; /* Hidden by default */
+        }
+        .modal.flex {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <!-- Header -->
+        <header class="text-center py-12">
+            <h1 class="text-4xl md:text-6xl font-extrabold" style="color: #7F187F;">The AI Revolution at Wayfair Shanghai</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Insights from our 2025 Generative AI Utilization Survey reveal a workforce embracing innovation.</p>
+            <div class="mt-6 text-gray-500 text-sm md:text-base">
+                <p>Last Updated: <span id="lastUpdatedDate"></span> | Survey Takers: 50</p>
+            </div>
+        </header>
+
+        <main class="space-y-16">
+            <!-- Adoption Pulse Section -->
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div class="bg-white rounded-lg shadow-lg p-6 md:col-span-2">
+                    <h2 class="text-2xl font-bold mb-4 text-center">AI Usage Frequency</h2>
+                    <p class="text-gray-600 text-center mb-6">A significant majority of employees are integrating AI into their work routines daily.</p>
+                    <div class="h-64 max-w-md mx-auto">
+                        <canvas id="frequencyChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6 text-center h-full flex flex-col justify-center">
+                    <h2 class="text-2xl font-bold mb-4">Overall Sentiment</h2>
+                    <div class="text-8xl font-black" style="color: #92DA4D;">95%</div>
+                    <p class="text-2xl font-bold mt-2">Positive</p>
+                    <p class="text-gray-600 mt-4">Employees are optimistic about embedding more AI into their work.</p>
+                </div>
+            </section>
+
+            <!-- Toolkit & Use Cases Section -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-3xl font-bold text-center mb-2">Our Go-To AI Toolkit</h2>
+                    <p class="text-gray-600 text-center mb-8">Popular tools driving productivity.</p>
+                    <div class="h-96">
+                        <canvas id="toolsChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-3xl font-bold text-center mb-2">Top Use Cases for Generative AI</h2>
+                    <p class="text-gray-600 text-center mb-8">Diverse applications sparking innovation.</p>
+                    <div class="h-96">
+                        <canvas id="useCasesChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Departmental Insights Section -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-8">Departmental AI Focus: Unique Strengths</h2>
+                <div id="departmentalInsights" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Department cards will be injected here by JavaScript -->
+                </div>
+            </section>
+            
+            <!-- Success Stories Section -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-8">AI in Action: Success Stories</h2>
+                <div id="successStories" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Success story cards will be injected here by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Opportunities Section -->
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-8">The Future is Now: Opportunities Ahead</h2>
+                <div id="opportunities" class="space-y-8">
+                    <!-- Opportunity rows will be injected here by JavaScript -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center py-12 mt-16 border-t border-gray-200">
+            <h2 class="text-2xl font-bold" style="color: #7F187F;">Pioneering the Future, Together</h2>
+            <p class="mt-2 text-gray-600">Thank you for driving innovation. Your engagement with AI is shaping a more efficient future for Wayfair Shanghai.</p>
+        </footer>
+    </div>
+    
+    <!-- Modal for "Generate More Details" -->
+    <div id="llmModal" class="modal fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-60">
+        <div class="bg-white rounded-lg shadow-xl p-6 m-4 max-w-2xl w-full relative" onclick="event.stopPropagation()">
+            <h3 id="modalTitle" class="text-2xl font-bold mb-4">Details</h3>
+            <div id="modalContent" class="text-gray-700">
+                <!-- Content will be injected here -->
+            </div>
+            <button id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+        </div>
+    </div>
+
+    <script>
+    // Wait for the DOM to be fully loaded before running scripts
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Constants & Config ---
+        const WAYFAIR_PURPLE = '#7F187F';
+        const WAYFAIR_LIGHT_GREEN = '#92DA4D';
+        const WAYFAIR_YELLOW = '#FFC600';
+        const WAYFAIR_GREEN = '#57C377';
+        const FONT_COLOR = '#374151';
+
+        const SHARED_TOOLTIP_OPTIONS = {
+            backgroundColor: '#ffffff',
+            titleColor: FONT_COLOR,
+            titleFont: { weight: 'bold', size: 14 },
+            bodyColor: '#4b5563',
+            borderColor: '#e5e7eb',
+            borderWidth: 1,
+            padding: 10,
+            displayColors: true,
+            boxPadding: 4,
+            cornerRadius: 8,
+        };
+
+        // --- Chart Data ---
+        const frequencyData = {
+            labels: ['Daily', 'A few times a week', 'A few times a month'],
+            datasets: [{ data: [34, 12, 3], backgroundColor: [WAYFAIR_PURPLE, WAYFAIR_LIGHT_GREEN, WAYFAIR_YELLOW], borderColor: '#ffffff', borderWidth: 4, hoverOffset: 8 }]
+        };
+        const toolsData = {
+            labels: ['ChatGPT', 'Gemini', 'Glean', 'Deepseek', 'Other'],
+            datasets: [{ label: 'Mentions', data: [22, 22, 18, 4, 6], backgroundColor: [WAYFAIR_PURPLE, WAYFAIR_LIGHT_GREEN, WAYFAIR_YELLOW, WAYFAIR_GREEN, '#A020F0'], borderWidth: 1, borderRadius: 8 }]
+        };
+        const useCasesData = {
+            labels: ['Translation', 'Brainstorming', 'Data analysis', 'Customer Comms', 'Writing assistance', 'Coding'],
+            datasets: [{ label: 'Mentions', data: [25, 13, 12, 10, 9, 9], backgroundColor: ['#57C377', '#6BCF87', '#7FDA97', '#92E5A7', '#A6EFB7', '#BAF8C7'], borderWidth: 1, borderRadius: 8 }]
+        };
+
+        // --- Content Data ---
+        const departmentalInsights = [
+            { title: "CM", text: "Uniquely utilizing AI for complex data analysis, Looker calculations, and generating supplier FAQs.", icon: '📊' },
+            { title: "Desk/GPS", text: "Focused on leveraging AI for knowledge retrieval via Glean, assisting new hires, and automating support processes.", icon: '👥' },
+            { title: "CG/CGF", text: "Using AI to refine professional communication with suppliers and to efficiently code supplier information.", icon: '💼' },
+            { title: "SAM", text: "Leveraging AI primarily for translation and initial analysis of survey data to gain quick insights.", icon: '💬' },
+            { title: "ACQ", text: "Innovating with AI to overcome language barriers, developing custom translation solutions.", icon: '⚡️' },
+            { title: "HR/Academy", text: "Exploring AI for creative applications like brainstorming and generating reference images for vendors.", icon: '💡' }
+        ];
+        const successStories = [
+            { id: "story1", title: "Automated Scripting", text: "Used AI to generate custom scripts, automating repetitive tasks and saving significant time.", icon: '🤖' },
+            { id: "story2", title: "Cross-Cultural Communication", text: "A custom AI translator was built to overcome language barriers and improve global communications.", icon: '🌐' },
+            { id: "story3", title: "Advanced Data Insights", text: "AI proved instrumental in formulating complex queries, enabling deeper insights from business data.", icon: '📈' },
+            { id: "story4", title: "Email Summarization", text: "AI tools are efficiently summarizing lengthy email threads, highlighting key info and next steps.", icon: '✉️' },
+            { id: "story5", title: "SOP & Writing Polish", text: "Gemini is used to quickly summarize complex SOPs and polish written communications for clarity.", icon: '✍️' },
+            { id: "story6", title: "Efficient Knowledge Retrieval", text: "Glean has proven highly effective for new hires to quickly find relevant information, accelerating onboarding.", icon: '🔍' }
+        ];
+        const opportunities = [
+            { challenge: "Time-consuming report & presentation creation.", solution: "Automated generation of weekly reports and Google Slides drafts." },
+            { challenge: "Answering repetitive supplier and internal questions.", solution: "An intelligent knowledge base that handles basic queries instantly." },
+            { challenge: "Analyzing historical data to predict trends is complex.", solution: "AI models to identify supplier issues and summarize ad performance." },
+            { challenge: "Manual processing of meeting minutes & paperwork.", solution: "AI-driven transcription and summarization of meetings." }
+        ];
+
+        // --- Render Dynamic Content ---
+        const departmentalContainer = document.getElementById('departmentalInsights');
+        departmentalInsights.forEach(item => {
+            departmentalContainer.innerHTML += `
+                <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center text-center">
+                    <div class="text-4xl mb-4">${item.icon}</div>
+                    <h3 class="text-xl font-bold mb-2">${item.title}</h3>
+                    <p class="text-gray-600">${item.text}</p>
+                </div>`;
+        });
+
+        const storiesContainer = document.getElementById('successStories');
+        successStories.forEach(story => {
+            storiesContainer.innerHTML += `
+                <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col">
+                    <div class="text-4xl mb-4">${story.icon}</div>
+                    <h3 class="text-xl font-bold mb-2">${story.title}</h3>
+                    <p class="text-gray-600 flex-grow mb-4">${story.text}</p>
+                    <button data-story-text="${story.text}" data-story-title="${story.title}" class="generate-details-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mt-auto">
+                        ✨ Generate More Details
+                    </button>
+                </div>`;
+        });
+        
+        const opportunitiesContainer = document.getElementById('opportunities');
+        opportunities.forEach(opp => {
+            opportunitiesContainer.innerHTML += `
+                <div class="grid grid-cols-1 md:grid-cols-5 items-center gap-4 text-center">
+                    <div class="md:col-span-2 bg-white p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-lg text-red-500">Current Challenge</h4>
+                        <p>${opp.challenge}</p>
+                    </div>
+                    <div class="text-2xl font-bold" style="color: #7F187F;">&rarr;</div>
+                    <div class="md:col-span-2 card-gradient text-white p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-lg">AI-Powered Solution</h4>
+                        <p>${opp.solution}</p>
+                    </div>
+                </div>`;
+        });
+
+        // --- Initialize Charts ---
+        new Chart(document.getElementById('frequencyChart'), {
+            type: 'doughnut', data: frequencyData, options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom' }, tooltip: { ...SHARED_TOOLTIP_OPTIONS } } }
+        });
+        new Chart(document.getElementById('toolsChart'), {
+            type: 'bar', data: toolsData, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...SHARED_TOOLTIP_OPTIONS } } }
+        });
+        new Chart(document.getElementById('useCasesChart'), {
+            type: 'bar', data: useCasesData, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...SHARED_TOOLTIP_OPTIONS } } }
+        });
+
+        // --- Modal Logic ---
+        const modal = document.getElementById('llmModal');
+        const modalTitleEl = document.getElementById('modalTitle');
+        const modalContentEl = document.getElementById('modalContent');
+        const closeModalBtn = document.getElementById('closeModal');
+
+        const showModal = () => modal.classList.add('flex');
+        const hideModal = () => modal.classList.remove('flex');
+
+        closeModalBtn.addEventListener('click', hideModal);
+        modal.addEventListener('click', hideModal);
+
+        document.querySelectorAll('.generate-details-btn').forEach(button => {
+            button.addEventListener('click', async (event) => {
+                const storyText = event.target.dataset.storyText;
+                const storyTitle = event.target.dataset.storyTitle;
+                
+                showModal();
+                modalTitleEl.textContent = "Generating Details...";
+                modalContentEl.innerHTML = `<div class="text-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div><p class="text-gray-600 mt-2">Generating insights...</p></div>`;
+
+                const prompt = `Elaborate on the following AI success story from a company survey, providing more context, potential impact, and next steps in a concise paragraph: "${storyText}"`;
+                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+                const apiKey = ""; // Not needed for gemini-2.0-flash in this environment
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    const result = await response.json();
+                    if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+                        modalContentEl.textContent = result.candidates[0].content.parts[0].text;
+                        modalTitleEl.textContent = storyTitle;
+                    } else { throw new Error("Invalid response from AI."); }
+                } catch (error) {
+                    modalTitleEl.textContent = "Error";
+                    modalContentEl.textContent = `Failed to generate details. ${error.message}`;
+                }
+            });
+        });
+        
+        // --- Set Dynamic Date ---
+        document.getElementById('lastUpdatedDate').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    });
+    </script>
+</body>
+</html>
