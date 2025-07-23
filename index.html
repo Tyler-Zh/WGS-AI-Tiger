@@ -17,14 +17,28 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        :root {
+            --wayfair-dark-purple: #7f187f;
+            --wayfair-light-purple: #c98dc5;
+            --wayfair-dark-teal: #01768b;
+            --wayfair-light-teal: #84c6d1;
+            --wayfair-dark-gray: #414141;
+            --wayfair-light-gray: #808284;
+            --wayfair-red: #c91f24;
+            --wayfair-yellow: #ff960b;
+        }
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
+            color: var(--wayfair-dark-gray);
         }
-        .card-gradient {
-            background: linear-gradient(135deg, #7F187F, #92DA4D);
+        .wayfair-btn {
+            background-color: var(--wayfair-dark-purple);
+            transition: background-color 0.3s ease;
         }
-        /* Styles for the modal */
+        .wayfair-btn:hover {
+            background-color: #6b156b;
+        }
         .modal {
             display: none; /* Hidden by default */
         }
@@ -38,9 +52,9 @@
     <div class="container mx-auto p-4 md:p-8 max-w-7xl">
         <!-- Header -->
         <header class="text-center py-12">
-            <h1 class="text-4xl md:text-6xl font-extrabold" style="color: #7F187F;">The AI Revolution at Wayfair Shanghai</h1>
+            <h1 class="text-4xl md:text-6xl font-extrabold" style="color: var(--wayfair-dark-purple);">The AI Revolution at Wayfair Shanghai</h1>
             <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Insights from our 2025 Generative AI Utilization Survey reveal a workforce embracing innovation.</p>
-            <div class="mt-6 text-gray-500 text-sm md:text-base">
+            <div class="mt-6 text-sm md:text-base" style="color: var(--wayfair-light-gray);">
                 <p>Last Updated: <span id="lastUpdatedDate"></span> | Survey Takers: 50</p>
             </div>
         </header>
@@ -57,7 +71,7 @@
                 </div>
                 <div class="bg-white rounded-lg shadow-lg p-6 text-center h-full flex flex-col justify-center">
                     <h2 class="text-2xl font-bold mb-4">Overall Sentiment</h2>
-                    <div class="text-8xl font-black" style="color: #92DA4D;">95%</div>
+                    <div class="text-8xl font-black" style="color: var(--wayfair-yellow);">95%</div>
                     <p class="text-2xl font-bold mt-2">Positive</p>
                     <p class="text-gray-600 mt-4">Employees are optimistic about embedding more AI into their work.</p>
                 </div>
@@ -108,7 +122,7 @@
 
         <!-- Footer -->
         <footer class="text-center py-12 mt-16 border-t border-gray-200">
-            <h2 class="text-2xl font-bold" style="color: #7F187F;">Pioneering the Future, Together</h2>
+            <h2 class="text-2xl font-bold" style="color: var(--wayfair-dark-purple);">Pioneering the Future, Together</h2>
             <p class="mt-2 text-gray-600">Thank you for driving innovation. Your engagement with AI is shaping a more efficient future for Wayfair Shanghai.</p>
         </footer>
     </div>
@@ -125,14 +139,16 @@
     </div>
 
     <script>
-    // Wait for the DOM to be fully loaded before running scripts
     document.addEventListener('DOMContentLoaded', () => {
-        // --- Constants & Config ---
-        const WAYFAIR_PURPLE = '#7F187F';
-        const WAYFAIR_LIGHT_GREEN = '#92DA4D';
-        const WAYFAIR_YELLOW = '#FFC600';
-        const WAYFAIR_GREEN = '#57C377';
-        const FONT_COLOR = '#374151';
+        // --- Constants & Config from Wayfair Brand Colors ---
+        const WAYFAIR_DARK_PURPLE = '#7f187f';
+        const WAYFAIR_LIGHT_PURPLE = '#c98dc5';
+        const WAYFAIR_DARK_TEAL = '#01768b';
+        const WAYFAIR_LIGHT_TEAL = '#84c6d1';
+        const WAYFAIR_DARK_GRAY = '#414141';
+        const WAYFAIR_YELLOW = '#ff960b';
+        const WAYFAIR_RED = '#c91f24';
+        const FONT_COLOR = WAYFAIR_DARK_GRAY;
 
         const SHARED_TOOLTIP_OPTIONS = {
             backgroundColor: '#ffffff',
@@ -150,33 +166,48 @@
         // --- Chart Data ---
         const frequencyData = {
             labels: ['Daily', 'A few times a week', 'A few times a month'],
-            datasets: [{ data: [34, 12, 3], backgroundColor: [WAYFAIR_PURPLE, WAYFAIR_LIGHT_GREEN, WAYFAIR_YELLOW], borderColor: '#ffffff', borderWidth: 4, hoverOffset: 8 }]
+            datasets: [{ data: [34, 12, 3], backgroundColor: [WAYFAIR_DARK_PURPLE, WAYFAIR_DARK_TEAL, WAYFAIR_YELLOW], borderColor: '#ffffff', borderWidth: 4, hoverOffset: 8 }]
         };
         const toolsData = {
-            labels: ['ChatGPT', 'Gemini', 'Glean', 'Deepseek', 'Other'],
-            datasets: [{ label: 'Mentions', data: [22, 22, 18, 4, 6], backgroundColor: [WAYFAIR_PURPLE, WAYFAIR_LIGHT_GREEN, WAYFAIR_YELLOW, WAYFAIR_GREEN, '#A020F0'], borderWidth: 1, borderRadius: 8 }]
+            labels: ['ChatGPT/GPT', 'Gemini', 'Glean', 'Deepseek', 'Other'],
+            datasets: [{ label: 'Mentions', data: [36, 22, 18, 4, 6], backgroundColor: [WAYFAIR_DARK_PURPLE, WAYFAIR_LIGHT_PURPLE, WAYFAIR_DARK_TEAL, WAYFAIR_LIGHT_TEAL, WAYFAIR_DARK_GRAY], borderWidth: 1, borderRadius: 8 }]
         };
         const useCasesData = {
             labels: ['Translation', 'Brainstorming', 'Data analysis', 'Customer Comms', 'Writing assistance', 'Coding'],
-            datasets: [{ label: 'Mentions', data: [25, 13, 12, 10, 9, 9], backgroundColor: ['#57C377', '#6BCF87', '#7FDA97', '#92E5A7', '#A6EFB7', '#BAF8C7'], borderWidth: 1, borderRadius: 8 }]
+            datasets: [{ label: 'Mentions', data: [25, 13, 12, 10, 9, 9], backgroundColor: [WAYFAIR_DARK_TEAL, '#3491a2', '#5eabb8', '#84c6d1', '#a9e0e9', '#d0f5fa'], borderWidth: 1, borderRadius: 8 }]
         };
 
-        // --- Content Data ---
+        // --- SVG Icons ---
+        const icons = {
+            trendingUp: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>`,
+            users: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
+            briefcase: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>`,
+            message: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`,
+            zap: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`,
+            lightbulb: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 9 4c0 1.3.5 2.6 1.5 3.5.7.8 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg>`,
+            cpu: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"></rect><path d="M9 9h6v6H9z"></path><path d="M9 1v3"></path><path d="M15 1v3"></path><path d="M9 20v3"></path><path d="M15 20v3"></path><path d="M20 9h3"></path><path d="M20 14h3"></path><path d="M1 9h3"></path><path d="M1 14h3"></path></svg>`,
+            globe: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20z"></path><path d="M2 12h20"></path></svg>`,
+            mail: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>`,
+            edit: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`,
+            search: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>`
+        };
+
+        // --- Content Data with Pre-Generated Details ---
         const departmentalInsights = [
-            { title: "CM", text: "Uniquely utilizing AI for complex data analysis, Looker calculations, and generating supplier FAQs.", icon: '📊' },
-            { title: "Desk/GPS", text: "Focused on leveraging AI for knowledge retrieval via Glean, assisting new hires, and automating support processes.", icon: '👥' },
-            { title: "CG/CGF", text: "Using AI to refine professional communication with suppliers and to efficiently code supplier information.", icon: '💼' },
-            { title: "SAM", text: "Leveraging AI primarily for translation and initial analysis of survey data to gain quick insights.", icon: '💬' },
-            { title: "ACQ", text: "Innovating with AI to overcome language barriers, developing custom translation solutions.", icon: '⚡️' },
-            { title: "HR/Academy", text: "Exploring AI for creative applications like brainstorming and generating reference images for vendors.", icon: '💡' }
+            { title: "CM", text: "Uniquely utilizing AI for complex data analysis, Looker calculations, and generating supplier FAQs.", icon: icons.trendingUp },
+            { title: "Desk/GPS", text: "Focused on leveraging AI for knowledge retrieval via Glean, assisting new hires, and automating support processes.", icon: icons.users },
+            { title: "CG/CGF", text: "Using AI to refine professional communication with suppliers and to efficiently code supplier information.", icon: icons.briefcase },
+            { title: "SAM", text: "Leveraging AI primarily for translation and initial analysis of survey data to gain quick insights.", icon: icons.message },
+            { title: "ACQ", text: "Innovating with AI to overcome language barriers, developing custom translation solutions.", icon: icons.zap },
+            { title: "HR/Academy", text: "Exploring AI for creative applications like brainstorming and generating reference images for vendors.", icon: icons.lightbulb }
         ];
         const successStories = [
-            { id: "story1", title: "Automated Scripting", text: "Used AI to generate custom scripts, automating repetitive tasks and saving significant time.", icon: '🤖' },
-            { id: "story2", title: "Cross-Cultural Communication", text: "A custom AI translator was built to overcome language barriers and improve global communications.", icon: '🌐' },
-            { id: "story3", title: "Advanced Data Insights", text: "AI proved instrumental in formulating complex queries, enabling deeper insights from business data.", icon: '📈' },
-            { id: "story4", title: "Email Summarization", text: "AI tools are efficiently summarizing lengthy email threads, highlighting key info and next steps.", icon: '✉️' },
-            { id: "story5", title: "SOP & Writing Polish", text: "Gemini is used to quickly summarize complex SOPs and polish written communications for clarity.", icon: '✍️' },
-            { id: "story6", title: "Efficient Knowledge Retrieval", text: "Glean has proven highly effective for new hires to quickly find relevant information, accelerating onboarding.", icon: '🔍' }
+            { id: "story1", title: "Automated Scripting", text: "Used AI to generate custom scripts, automating repetitive tasks and saving significant time.", icon: icons.cpu, detail: "This success story highlights a significant leap in operational efficiency. By feeding plain-language descriptions of repetitive data-handling tasks into an AI model, employees were able to generate functional Tamper Monkey and VBA scripts without needing deep coding expertise. The impact was immediate, reducing hours of manual work to mere minutes and freeing up team members to focus on more strategic, high-value activities. The next step is to create a shared library of these AI-generated scripts for wider team use." },
+            { id: "story2", title: "Cross-Cultural Communication", text: "A custom AI translator was built to overcome language barriers and improve global communications.", icon: icons.globe, detail: "To address communication gaps between international teams, a specialized glossary of Wayfair-specific jargon, acronyms, and technical terms was compiled. This glossary was then used to fine-tune a large language model, creating a powerful, context-aware translation tool. The impact has been a marked reduction in misunderstandings and faster, clearer communication. Future plans involve integrating this tool directly into internal chat platforms." },
+            { id: "story3", title: "Advanced Data Insights", text: "AI proved instrumental in formulating complex queries, enabling deeper insights from business data.", icon: icons.trendingUp, detail: "Analysts are now using natural language to ask complex questions about business data. The AI then translates these questions into precise Looker or SQL queries. This has democratized data access, allowing less technical users to uncover trends and insights that were previously hidden. The primary impact is faster, data-driven decision-making. Next steps include training the AI on more complex schemas to handle even more advanced analytical requests." },
+            { id: "story4", title: "Email Summarization", text: "AI tools are efficiently summarizing lengthy email threads, highlighting key info and next steps.", icon: icons.mail, detail: "By pasting long, convoluted email chains into an AI tool, employees can receive instant, concise summaries. The AI identifies key decisions, action items, and deadlines, transforming information overload into a clear, actionable brief. This has significantly improved project tracking and accountability. The next phase is to explore browser extensions that can perform this summarization directly within the email client." },
+            { id: "story5", title: "SOP & Writing Polish", text: "Gemini is used to quickly summarize complex SOPs and polish written communications for clarity.", icon: icons.edit, detail: "This application serves a dual purpose: quickly onboarding employees by summarizing lengthy Standard Operating Procedures, and elevating the quality of external communications. The AI helps refine grammar, tone, and clarity, ensuring all written materials meet a high standard of professionalism. The impact is a more consistent brand voice and faster training. The team is now looking to create pre-defined style templates for the AI to follow." },
+            { id: "story6", title: "Efficient Knowledge Retrieval", text: "Glean has proven highly effective for new hires to quickly find relevant information, accelerating onboarding.", icon: icons.search, detail: "New hires are leveraging Glean's AI-powered search to ask questions in natural language and receive direct answers sourced from internal documentation. This self-service approach has drastically reduced the time it takes for new team members to become productive and has lessened the burden on senior staff for basic questions. The next step is to proactively identify knowledge gaps based on failed searches and create new documentation to fill them." }
         ];
         const opportunities = [
             { challenge: "Time-consuming report & presentation creation.", solution: "Automated generation of weekly reports and Google Slides drafts." },
@@ -187,43 +218,49 @@
 
         // --- Render Dynamic Content ---
         const departmentalContainer = document.getElementById('departmentalInsights');
+        let departmentalHTML = '';
         departmentalInsights.forEach(item => {
-            departmentalContainer.innerHTML += `
+            departmentalHTML += `
                 <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center text-center">
-                    <div class="text-4xl mb-4">${item.icon}</div>
+                    <div class="w-10 h-10 mb-4" style="color: var(--wayfair-dark-purple);">${item.icon}</div>
                     <h3 class="text-xl font-bold mb-2">${item.title}</h3>
                     <p class="text-gray-600">${item.text}</p>
                 </div>`;
         });
+        departmentalContainer.innerHTML = departmentalHTML;
 
         const storiesContainer = document.getElementById('successStories');
+        let storiesHTML = '';
         successStories.forEach(story => {
-            storiesContainer.innerHTML += `
+            storiesHTML += `
                 <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col">
-                    <div class="text-4xl mb-4">${story.icon}</div>
+                    <div class="w-10 h-10 mb-4" style="color: var(--wayfair-dark-purple);">${story.icon}</div>
                     <h3 class="text-xl font-bold mb-2">${story.title}</h3>
                     <p class="text-gray-600 flex-grow mb-4">${story.text}</p>
-                    <button data-story-text="${story.text}" data-story-title="${story.title}" class="generate-details-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mt-auto">
-                        ✨ Generate More Details
+                    <button data-story-detail="${story.detail}" data-story-title="${story.title}" class="generate-details-btn wayfair-btn text-white font-bold py-2 px-4 rounded-lg mt-auto">
+                        ✨ Show More Details
                     </button>
                 </div>`;
         });
+        storiesContainer.innerHTML = storiesHTML;
         
         const opportunitiesContainer = document.getElementById('opportunities');
+        let opportunitiesHTML = '';
         opportunities.forEach(opp => {
-            opportunitiesContainer.innerHTML += `
+            opportunitiesHTML += `
                 <div class="grid grid-cols-1 md:grid-cols-5 items-center gap-4 text-center">
                     <div class="md:col-span-2 bg-white p-4 rounded-lg shadow-md">
-                        <h4 class="font-bold text-lg text-red-500">Current Challenge</h4>
+                        <h4 class="font-bold text-lg" style="color: var(--wayfair-red);">Current Challenge</h4>
                         <p>${opp.challenge}</p>
                     </div>
-                    <div class="text-2xl font-bold" style="color: #7F187F;">&rarr;</div>
-                    <div class="md:col-span-2 card-gradient text-white p-4 rounded-lg shadow-md">
+                    <div class="text-2xl font-bold" style="color: var(--wayfair-dark-purple);">&rarr;</div>
+                    <div class="md:col-span-2 text-white p-4 rounded-lg shadow-md" style="background-color: var(--wayfair-dark-purple);">
                         <h4 class="font-bold text-lg">AI-Powered Solution</h4>
                         <p>${opp.solution}</p>
                     </div>
                 </div>`;
         });
+        opportunitiesContainer.innerHTML = opportunitiesHTML;
 
         // --- Initialize Charts ---
         new Chart(document.getElementById('frequencyChart'), {
@@ -248,32 +285,16 @@
         closeModalBtn.addEventListener('click', hideModal);
         modal.addEventListener('click', hideModal);
 
-        document.querySelectorAll('.generate-details-btn').forEach(button => {
-            button.addEventListener('click', async (event) => {
-                const storyText = event.target.dataset.storyText;
-                const storyTitle = event.target.dataset.storyTitle;
+        document.body.addEventListener('click', (event) => {
+            if (event.target.classList.contains('generate-details-btn')) {
+                const button = event.target;
+                const storyDetail = button.dataset.storyDetail;
+                const storyTitle = button.dataset.storyTitle;
                 
+                modalTitleEl.textContent = storyTitle;
+                modalContentEl.textContent = storyDetail;
                 showModal();
-                modalTitleEl.textContent = "Generating Details...";
-                modalContentEl.innerHTML = `<div class="text-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div><p class="text-gray-600 mt-2">Generating insights...</p></div>`;
-
-                const prompt = `Elaborate on the following AI success story from a company survey, providing more context, potential impact, and next steps in a concise paragraph: "${storyText}"`;
-                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                const apiKey = ""; // Not needed for gemini-2.0-flash in this environment
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                try {
-                    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                    const result = await response.json();
-                    if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
-                        modalContentEl.textContent = result.candidates[0].content.parts[0].text;
-                        modalTitleEl.textContent = storyTitle;
-                    } else { throw new Error("Invalid response from AI."); }
-                } catch (error) {
-                    modalTitleEl.textContent = "Error";
-                    modalContentEl.textContent = `Failed to generate details. ${error.message}`;
-                }
-            });
+            }
         });
         
         // --- Set Dynamic Date ---
