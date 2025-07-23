@@ -111,6 +111,24 @@
                 </div>
             </section>
 
+            <!-- Support Needed and Wish List Section -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-3xl font-bold text-center mb-2">Support Needed for Better Utilizing AI</h2>
+                    <p class="text-gray-600 text-center mb-8">Key areas where support can enhance AI effectiveness.</p>
+                    <div class="h-96">
+                        <canvas id="barriersChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-3xl font-bold text-center mb-2">The AI Wish List</h2>
+                    <p class="text-gray-600 text-center mb-8">Top tasks employees want AI to handle next.</p>
+                    <div id="wishList" class="space-y-4 pt-4">
+                        <!-- Wish list items will be injected here -->
+                    </div>
+                </div>
+            </section>
+
             <!-- Opportunities Section -->
             <section>
                 <h2 class="text-3xl font-bold text-center mb-8">The Future is Now: Opportunities Ahead</h2>
@@ -176,6 +194,10 @@
             labels: ['Translation', 'Brainstorming', 'Data analysis', 'Customer Comms', 'Writing assistance', 'Coding'],
             datasets: [{ label: 'Mentions', data: [25, 13, 12, 10, 9, 9], backgroundColor: [WAYFAIR_DARK_TEAL, '#3491a2', '#5eabb8', '#84c6d1', '#a9e0e9', '#d0f5fa'], borderWidth: 1, borderRadius: 8 }]
         };
+        const barriersData = {
+            labels: ['Better Tools (GPT-4)', 'More Training', 'Clearer Guidelines', 'More Time to Learn', 'Tool Integration'],
+            datasets: [{ label: 'Mentions', data: [28, 21, 15, 12, 9], backgroundColor: [WAYFAIR_RED, '#d15256', '#d9787b', '#e19ea0', '#e9c4c5'], borderWidth: 1, borderRadius: 8 }]
+        };
 
         // --- SVG Icons ---
         const icons = {
@@ -189,7 +211,8 @@
             globe: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20z"></path><path d="M2 12h20"></path></svg>`,
             mail: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>`,
             edit: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`,
-            search: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>`
+            search: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>`,
+            checkCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`
         };
 
         // --- Content Data with Pre-Generated Details ---
@@ -214,6 +237,13 @@
             { challenge: "Answering repetitive supplier and internal questions.", solution: "An intelligent knowledge base that handles basic queries instantly." },
             { challenge: "Analyzing historical data to predict trends is complex.", solution: "AI models to identify supplier issues and summarize ad performance." },
             { challenge: "Manual processing of meeting minutes & paperwork.", solution: "AI-driven transcription and summarization of meetings." }
+        ];
+        const wishListData = [
+            { text: "Automate reports & presentations", icon: icons.trendingUp },
+            { text: "AI-powered data analysis & visualization", icon: icons.zap },
+            { text: "Handle repetitive supplier/internal questions", icon: icons.message },
+            { text: "Summarize meeting minutes automatically", icon: icons.briefcase },
+            { text: "Manage and track SOP updates", icon: icons.edit }
         ];
 
         // --- Render Dynamic Content ---
@@ -262,6 +292,19 @@
         });
         opportunitiesContainer.innerHTML = opportunitiesHTML;
 
+        const wishListContainer = document.getElementById('wishList');
+        let wishListHTML = '';
+        wishListData.forEach(item => {
+            wishListHTML += `
+                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                    <div class="w-6 h-6 mr-4" style="color: var(--wayfair-dark-teal);">${icons.checkCircle}</div>
+                    <span class="text-lg">${item.text}</span>
+                </div>
+            `;
+        });
+        wishListContainer.innerHTML = wishListHTML;
+
+
         // --- Initialize Charts ---
         new Chart(document.getElementById('frequencyChart'), {
             type: 'doughnut', data: frequencyData, options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom' }, tooltip: { ...SHARED_TOOLTIP_OPTIONS } } }
@@ -271,6 +314,9 @@
         });
         new Chart(document.getElementById('useCasesChart'), {
             type: 'bar', data: useCasesData, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...SHARED_TOOLTIP_OPTIONS } } }
+        });
+        new Chart(document.getElementById('barriersChart'), {
+            type: 'bar', data: barriersData, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...SHARED_TOOLTIP_OPTIONS } } }
         });
 
         // --- Modal Logic ---
