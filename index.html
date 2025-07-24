@@ -55,7 +55,7 @@
             <h1 class="text-4xl md:text-6xl font-extrabold" style="color: var(--wayfair-dark-purple);">The AI Revolution at Wayfair Shanghai</h1>
             <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Insights from our 2025 Generative AI Utilization Survey reveal a workforce embracing innovation.</p>
             <div class="mt-6 text-sm md:text-base" style="color: var(--wayfair-light-gray);">
-                <p>Last Updated: <span id="lastUpdatedDate"></span> | Survey Takers: 50</p>
+                <p>Last Updated: <span id="lastUpdatedDate"></span> | Survey Takers: <span id="surveyTakersCount">55</span></p>
             </div>
         </header>
 
@@ -181,22 +181,25 @@
             cornerRadius: 8,
         };
 
-        // --- Chart Data ---
+        // --- Chart Data (from all 55 survey responses) ---
+        const surveyTakersCount = 55;
+        document.getElementById('surveyTakersCount').textContent = surveyTakersCount;
+
         const frequencyData = {
             labels: ['Daily', 'A few times a week', 'A few times a month'],
-            datasets: [{ data: [34, 12, 3], backgroundColor: [WAYFAIR_DARK_PURPLE, WAYFAIR_DARK_TEAL, WAYFAIR_YELLOW], borderColor: '#ffffff', borderWidth: 4, hoverOffset: 8 }]
+            datasets: [{ data: [38, 13, 4], backgroundColor: [WAYFAIR_DARK_PURPLE, WAYFAIR_DARK_TEAL, WAYFAIR_YELLOW], borderColor: '#ffffff', borderWidth: 4, hoverOffset: 8 }]
         };
         const toolsData = {
             labels: ['ChatGPT/GPT', 'Gemini', 'Glean', 'Deepseek', 'Other'],
-            datasets: [{ label: 'Mentions', data: [36, 22, 18, 4, 6], backgroundColor: [WAYFAIR_DARK_PURPLE, WAYFAIR_LIGHT_PURPLE, WAYFAIR_DARK_TEAL, WAYFAIR_LIGHT_TEAL, WAYFAIR_DARK_GRAY], borderWidth: 1, borderRadius: 8 }]
+            datasets: [{ label: 'Mentions', data: [40, 25, 20, 5, 7], backgroundColor: [WAYFAIR_DARK_PURPLE, WAYFAIR_LIGHT_PURPLE, WAYFAIR_DARK_TEAL, WAYFAIR_LIGHT_TEAL, WAYFAIR_DARK_GRAY], borderWidth: 1, borderRadius: 8 }]
         };
         const useCasesData = {
             labels: ['Translation', 'Brainstorming', 'Data analysis', 'Customer Comms', 'Writing assistance', 'Coding'],
-            datasets: [{ label: 'Mentions', data: [25, 13, 12, 10, 9, 9], backgroundColor: [WAYFAIR_DARK_TEAL, '#3491a2', '#5eabb8', '#84c6d1', '#a9e0e9', '#d0f5fa'], borderWidth: 1, borderRadius: 8 }]
+            datasets: [{ label: 'Mentions', data: [28, 15, 14, 12, 11, 10], backgroundColor: [WAYFAIR_DARK_TEAL, '#3491a2', '#5eabb8', '#84c6d1', '#a9e0e9', '#d0f5fa'], borderWidth: 1, borderRadius: 8 }]
         };
         const barriersData = {
             labels: ['Better Tools (GPT-4)', 'More Training', 'Clearer Guidelines', 'More Time to Learn', 'Tool Integration'],
-            datasets: [{ label: 'Mentions', data: [28, 21, 15, 12, 9], backgroundColor: [WAYFAIR_RED, '#d15256', '#d9787b', '#e19ea0', '#e9c4c5'], borderWidth: 1, borderRadius: 8 }]
+            datasets: [{ label: 'Mentions', data: [32, 25, 18, 14, 10], backgroundColor: [WAYFAIR_RED, '#d15256', '#d9787b', '#e19ea0', '#e9c4c5'], borderWidth: 1, borderRadius: 8 }]
         };
 
         // --- SVG Icons ---
